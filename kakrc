@@ -14,6 +14,7 @@ plug "andreyorst/fzf.kak" config %{
 } 
 
 colorscheme gruvbox-dark
+set-face global comment "rgb:928374" # disable comment highlight
 
 hook global ModuleLoaded fzf %{
         set-option global fzf_highlight_command "bat"
