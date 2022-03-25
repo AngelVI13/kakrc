@@ -47,6 +47,12 @@ hook global NormalKey y|d|c %{ nop %sh{
 map global user P '!xsel --output --clipboard<ret>'
 map global user p '<a-!>xsel --output --clipboard<ret>'
 
+# jj instead of escape key
+hook global InsertChar j %{ try %{
+  exec -draft hH <a-k>jj<ret> d
+  exec <esc>
+}}
+
 # setup pluging manager & plugins
 evaluate-commands %sh{
     plugins="$kak_config/plugins"
