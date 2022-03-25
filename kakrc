@@ -26,17 +26,6 @@ try %{
     map global normal <c-a> ':inc %val{count} +<ret>'
     map global normal <c-x> ':inc %val{count} -<ret>'
 }
-## Ag (the silver searcher) is mush faster then grep.
-#try %{
-#evaluate-commands %sh{
-#    if ! command -v ag >/dev/null 2>&1; then
-#            echo 'echo -debug Missing ag command, it is more recommended than grep'
-#                    echo 'fail Missing ag command'
-#                        fi
-#                        }
-#                        set-option global grepcmd 'ag --noheading --column --nobreak'
-#                        }
-#                        map global user g ':grep ' -docstring 'grep text under cwd'
 
 # yank should go to system clipboard as well as the kakoune register.
 hook global NormalKey y|d|c %{ nop %sh{
@@ -52,6 +41,9 @@ hook global InsertChar j %{ try %{
   exec -draft hH <a-k>jj<ret> d
   exec <esc>
 }}
+
+# highlight TODO, FIXME, etc.
+add-highlighter global/ regex \b(TODO|FIXME|XXX|NOTE|BUG|DEBUG|TBD|HACK)\b 0:default+rb
 
 # setup pluging manager & plugins
 evaluate-commands %sh{
