@@ -5,28 +5,6 @@ add-highlighter global/nu number-lines -hlcursor -relative
 colorscheme gruvbox-dark
 set-face global comment "rgb:928374" # disable comment highlight
 
-## Add the same <c-a>/<c-x> functions as vim.
-try %{
-    evaluate-commands %sh{
-        if ! command -v bc >/dev/null 2>&1; then
-            echo 'echo -debug Missing bc command, <c-a> and <c-x> will not be set'
-            echo 'fail Missing bc command'
-        fi
-    }
-    define-command -hidden -params 2 inc %{
-        evaluate-commands %sh{
-            if [ "$1" = 0 ]; then
-                count=1
-            else
-                count="$1"
-            fi
-            printf '%s%s\n' 'execute-keys <a-i>na' "$2($count)<esc>|bc<ret>"
-        }
-    }
-    map global normal <c-a> ':inc %val{count} +<ret>'
-    map global normal <c-x> ':inc %val{count} -<ret>'
-}
-
 # yank should go to system clipboard as well as the kakoune register.
 hook global NormalKey y|d|c %{ nop %sh{
    printf %s "$kak_main_reg_dquote" | xsel --input --clipboard
@@ -66,9 +44,9 @@ hook global ModuleLoaded fzf %{
         set-option global fzf_highlight_command "bat"
 }
 hook global ModuleLoaded fzf-file %{
-    	# Custom file command is used cause sometimes i need to open
+        # Custom file command is used cause sometimes i need to open
 	# files which are part of gitignore etc.
-        set-option global fzf_file_command 'rg --files'
+        set-option global fzf_file_command 'rg'
 }
 
 hook global ModuleLoaded fzf-grep %{
@@ -79,12 +57,8 @@ hook global ModuleLoaded fzf-grep %{
 eval %sh{kak-lsp --kakoune -s $kak_session}  # Not needed if you load it with plug.kak.
 hook global WinSetOption filetype=(python|go) %{
         lsp-enable-window
-        lsp-inlay-diagnostics-enable global
-}
-
-set-option global lsp_config %{
-        [language.python.settings._]
-        "pyls.configurationSources" = ["flake8"]
+        # NOTE: this is buggy
+        # lsp-inlay-diagnostics-enable global
 }
 
 # Auto formatting & import organizing on save for Golang files
