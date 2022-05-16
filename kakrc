@@ -11,8 +11,8 @@ hook global NormalKey y|d|c %{ nop %sh{
 }}
 
 # use 'p or 'P to paste from the system clipboard.
-map global user P '!xsel --output --clipboard<ret>'
-map global user p '<a-!>xsel --output --clipboard<ret>'
+map global user P '!xsel --output --clipboard<ret>' -docstring "Paste system clipboard"
+map global user p '<a-!>xsel --output --clipboard<ret>' -docstring "paste system clipboard"
 
 # jj instead of escape key
 hook global InsertChar j %{ try %{
@@ -55,7 +55,7 @@ hook global ModuleLoaded fzf-grep %{
 
 # Setup LSP support
 eval %sh{kak-lsp --kakoune -s $kak_session}  # Not needed if you load it with plug.kak.
-hook global WinSetOption filetype=(python|go) %{
+hook global WinSetOption filetype=(python|go|typescript|json|html|css) %{
         lsp-enable-window
         # NOTE: this is buggy
         # lsp-inlay-diagnostics-enable global
@@ -70,3 +70,15 @@ hook global BufWritePre .*[.]go %{
 # Add shortcut for lsp mode ,l
 map global user l %{: enter-user-mode lsp<ret>} -docstring "LSP mode"
 
+define-command create-mark -docstring 'create a mark' %{
+    on-key %{
+        execute-keys  """%val{key}Z"
+        }
+}
+define-command goto-mark -docstring 'goto a mark' %{
+    on-key %{
+        execute-keys  """%val{key}z"
+        }
+}
+map global normal m ":create-mark<ret>"
+map global normal M ":goto-mark<ret>"
