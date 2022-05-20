@@ -33,7 +33,6 @@ evaluate-commands %sh{
 }
 plug "andreyorst/plug.kak" noload
 
-
 plug "andreyorst/fzf.kak" config %{
         # map -docstring 'fzf mode' global normal '<c-p>' ': fzf-mode<ret>'
         map global user f %{: fzf-mode<ret>} -docstring "FZF mode"
@@ -81,4 +80,10 @@ define-command goto-mark -docstring 'goto a mark' %{
         }
 }
 map global normal m ":create-mark<ret>"
-map global normal M ":goto-mark<ret>"
+map global normal \' ":goto-mark<ret>"
+
+plug "eraserhd/kak-ansi" config %{}
+
+set-option global grepcmd 'rg --column'
+
+map global user g ":grep "
